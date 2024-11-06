@@ -12,84 +12,84 @@ router.use(function timeLog (req, res, next) {
     next();
 })
 
-router.get('/list', urlencodedParser, function(req, res, next) {
+router.get('/list', urlencodedParser, async (req, res, next) => {
     console.log('[GET /highscores/list]');
-    Database.getDb(req.app, function(err, db) {
-        if (err) {
-            return next(err);
-        }
+
+    try {
+        // Get the database instance
+        const db = await Database.getDb(req.app); // Assuming getDb returns a Promise
 
         // Retrieve the top 10 high scores
-        var col = db.collection('highscore');
-        col.find({}).sort([['score', -1]]).limit(10).toArray(function(err, docs) {
-            var result = [];
-            if (err) {
-                console.log(err);
-            }
+        const col = await db.collection('highscore');
+        const docs = await col.find({}).sort([['score', -1]]).limit(10).toArray();
 
-            docs.forEach(function(item, index, array) {
-                result.push({ name: item['name'], cloud: item['cloud'],
-                              zone: item['zone'], host: item['host'],
-                              score: item['score'] });
-            });
+        const result = docs.map(item => ({
+            name: item.name,
+            cloud: item.cloud,
+            zone: item.zone,
+            host: item.host,
+            score: item.score
+        }));
 
-            res.json(result);
-        });
-    });
+        res.json(result);
+    } catch (err) {
+        console.error(err);
+        next(err); // Pass the error to the next middleware
+    }
 });
 
-// Accessed at /highscores
-router.post('/', urlencodedParser, function(req, res, next) {
-    console.log('[POST /highscores] body =', req.body,
-                ' host =', req.headers.host,
-                ' user-agent =', req.headers['user-agent'],
-                ' referer =', req.headers.referer);
+router.post('/', urlencodedParser, async (req, res, next) => {
+    try {
+        console.log('[POST /highscores] body =', req.body,
+                    ' host =', req.headers.host,
+                    ' user-agent =', req.headers['user-agent'],
+                    ' referer =', req.headers.referer);
 
-    var userScore = parseInt(req.body.score, 10),
-        userLevel = parseInt(req.body.level, 10);
+        const userScore = parseInt(req.body.score, 10);
+        const userLevel = parseInt(req.body.level, 10);
 
-    Database.getDb(req.app, function(err, db) {
-        if (err) {
-            return next(err);
-        }
+        // Get the database instance
+        const db = await Database.getDb(req.app); //  getDb is now a Promise-based method
+
+        console.log("DB good");
 
         // Insert high score with extra user data
-        db.collection('highscore').insertOne({
-                name: req.body.name,
-                cloud: req.body.cloud,
-                zone: req.body.zone,
-                host: req.body.host,
-                score: userScore,
-                level: userLevel,
-                date: Date(),
-                referer: req.headers.referer,
-                user_agent: req.headers['user-agent'],
-                hostname: req.hostname,
-                ip_addr: req.ip
-            }, {
-                w: 'majority',
-                j: true,
-                wtimeout: 10000
-            }, function(err, result) {
-                var returnStatus = '';
+        const result = await db.collection('highscore').insertOne({
+            name: req.body.name,
+            cloud: req.body.cloud,
+            zone: req.body.zone,
+            host: req.body.host,
+            score: userScore,
+            level: userLevel,
+            date: new Date(), // Use new Date() for current timestamp
+            referer: req.headers.referer,
+            user_agent: req.headers['user-agent'],
+            hostname: req.hostname,
+            ip_addr: req.ip
+        }, {
+            writeConcern: { w: 'majority', j: true, wtimeout: 10000 }
+        });
 
-                if (err) {
-                    console.log(err);
-                    returnStatus = 'error';
-                } else {
-                    console.log('Successfully inserted highscore');
-                    returnStatus = 'success';
-                }
+        console.log('Successfully inserted highscore');
 
-                res.json({
-                    name: req.body.name,
-                    zone: req.body.zone,
-                    score: userScore,
-                    level: userLevel,
-                    rs: returnStatus
-                });
-            });
-    });
+        res.json({
+            name: req.body.name,
+            zone: req.body.zone,
+            score: userScore,
+            level: userLevel,
+            rs: 'success'
+        });
+    } catch (err) {
+        console.error(err);
+        res.json({
+            name: req.body.name,
+            zone: req.body.zone,
+            score: userScore,
+            level: userLevel,
+            rs: 'error'
+        });
+        next(err); // Call next with the error for further handling if necessary
+    }
 });
 
 module.exports = router;
