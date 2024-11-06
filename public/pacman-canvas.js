@@ -161,10 +161,20 @@ function geronimo() {
     }
 
     function addHighscore() {
+        var tracer = SplunkRum.provider.getTracer("pacman-tracer");
+        const span = tracer.startSpan('submit-highscore', {
+            attributes: {
+                    'workflow.name': 'submit-highscore'
+            }
+        });
+        console.log('Started span');
         var name = $("input[type=text]").val();
         $("#highscore-form").html("Saving highscore...");
         ajaxAdd(name, game.cloudProvider, game.zone, game.host,
                  game.score.score, game.level);
+        span.setAttribute("playerName",name);
+        span.end();
+        console.log('Ended span');
     }
 
     function getUserId() {
