@@ -1,4 +1,4 @@
-FROM node:boron
+FROM node:bullseye
 
 ENV MONGO_SERVICE_HOST='127.0.0.1'
 ENV MONGO_AUTH_USER='root'
@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 
 # Clone game source code
 #RUN git clone https://github.com/font/pacman.git .
-COPY ../ .
+COPY . /usr/src/app/
 
 # Install app dependencies
 RUN npm install

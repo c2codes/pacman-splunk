@@ -32,9 +32,10 @@ The [Dockerfile](docker/Dockerfile) performs the following steps:
 
 To build the image run:
 
+From the main folder
+
 ```
-cd docker
-docker build -t <registry>/<user>/pacman-nodejs-app .
+docker build -t <registry>/<user>/pacman-splunk -f docker/Dockerfile .
 ```
 
 You can test the image by running:
