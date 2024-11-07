@@ -1,13 +1,24 @@
 FROM node:boron
 
-MAINTAINER Ivan Font <ifont@redhat.com>
+ARG MONGO_SERVICE_HOST
+ARG MONGO_AUTH_USER
+ARG MONGO_AUTH_PWD
+ARG OTEL_SERVICE_NAME
+ARG OTEL_RESOURCE_ATTRIBUTES
+
+ENV MONGO_SERVICE_HOST=$MONGO_SERVICE_HOST
+ENV MONGO_AUTH_USER=$MONGO_AUTH_USER
+ENV MONGO_AUTH_PWD=$MONGO_AUTH_PWD
+ENV OTEL_SERVICE_NAME=$OTEL_SERVICE_NAME
+ENV OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES
 
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Clone game source code
-RUN git clone https://github.com/font/pacman.git .
+#RUN git clone https://github.com/font/pacman.git .
+COPY ../ .
 
 # Install app dependencies
 RUN npm install
