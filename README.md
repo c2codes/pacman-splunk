@@ -1,4 +1,4 @@
-# pacman-splunk
+ -ltr# pacman-splunk
 Pac-Man
 
 ## Install dependencies
@@ -25,7 +25,7 @@ npm run dev
 
 The [Dockerfile](docker/Dockerfile) performs the following steps:
 
-1. It is based on Node.js LTS Version 18 (Bullseye).
+1. It is based on Node.js LTS Version 6 (Boron).
 1. It then clones the Pac-Man game into the configured application directory.
 1. Exposes port 8080 for the web server.
 1. Starts the Node.js application using `npm start`.
@@ -42,11 +42,12 @@ You can test the image by running:
 
 ```
 docker run \
--e MONGO_SERVICE_HOST=127.0.0.1 \
--e MONGO_AUTH_USER='root' \
--e MONGO_AUTH_PWD='root' \
--e OTEL_SERVICE_NAME='pacman-splunk' \
--e OTEL_RESOURCE_ATTRIBUTES='deployment.environment=cc-dev,service.version=1.0'
+-e MONGO_SERVICE_HOST<hostname> \
+-e OTEL_SERVICE_NAME='<service_name>' \
+-e OTEL_RESOURCE_ATTRIBUTES='deployment.environment=<environment>,service.version=<version>' \
+-e SPLUNK_RUM_REALM=<realm> \
+-e SPLUNK_RUM_ENVIRONMENT=<environment> \
+-e SPLUNK_RUM_TOKEN="<token>"
 -p 8000:8080 <registry>/<user>/pacman-splunk
 ```
 
@@ -55,7 +56,7 @@ And going to `http://localhost:8000/` to see if you get the Pac-Man game.
 Once you're satisfied you can push the image to the container registry.
 
 ```
-docker push <registry>/<user>/pacman-splunk
+docker push <registry>/<user>/pacman-nodejs-app
 ```
 
 ### Building using an s2i image
