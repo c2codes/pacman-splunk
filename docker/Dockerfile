@@ -14,9 +14,7 @@ RUN npm install
 # Expose port 8080
 EXPOSE 8080
 
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+RUN chmod +x entrypoint.sh
 
 # Run container
-CMD ["npm", "start"]
+CMD ["./entrypoint.sh"]

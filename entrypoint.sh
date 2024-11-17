@@ -8,3 +8,6 @@ sed -iE "s/realm:\s*\"[^\"]*\"/realm: \"${SPLUNK_RUM_REALM}\"/" /usr/src/app/pub
 
 # Set the RUM token
 sed -iE "s/rumAccessToken:\s*\"[^\"]*\"/rumAccessToken: \"${SPLUNK_RUM_TOKEN}\"/" /usr/src/app/public/index.html
+
+#Start container
+npm start

@@ -41,14 +41,7 @@ docker build -t <registry>/<user>/pacman-splunk -f docker/Dockerfile .
 You can test the image by running:
 
 ```
-docker run \
--e MONGO_SERVICE_HOST<hostname> \
--e OTEL_SERVICE_NAME='<service_name>' \
--e OTEL_RESOURCE_ATTRIBUTES='deployment.environment=<environment>,service.version=<version>' \
--e SPLUNK_RUM_REALM=<realm> \
--e SPLUNK_RUM_ENVIRONMENT=<environment> \
--e SPLUNK_RUM_TOKEN="<token>"
--p 8000:8080 <registry>/<user>/pacman-splunk
+./start_pacman_docker.sh
 ```
 
 And going to `http://localhost:8000/` to see if you get the Pac-Man game.
