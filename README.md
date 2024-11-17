@@ -38,7 +38,7 @@ From the main folder
 docker build -t <registry>/<user>/pacman-splunk -f docker/Dockerfile .
 ```
 
-You can test the image by running:
+You can test the image by creating an `env.sh` file from the `env.sh.template` file and then running:
 
 ```
 ./start_pacman_docker.sh
