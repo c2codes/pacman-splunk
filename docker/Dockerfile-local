@@ -17,4 +17,4 @@ EXPOSE 8080
 RUN chmod +x entrypoint.sh
 
 # Run container
-CMD ["./entrypoint.sh"]
+CMD ["./start.sh"]
