@@ -17,4 +17,4 @@ EXPOSE 8080
 RUN chmod +x start.sh
 
 # Run container
-CMD ["./start.sh"]
+CMD ["bash","-c","./start.sh"]
