@@ -40,7 +40,7 @@ router.get('/list', urlencodedParser, async (req, res, next) => {
 
 router.post('/', urlencodedParser, async (req, res, next) => {
     try {
-        console.log('[POST /highscores] body =', req.body,
+        console.log('[POST /highscores] body =', JSON.stringify(req.body),
                     ' host =', req.headers.host,
                     ' user-agent =', req.headers['user-agent'],
                     ' referer =', req.headers.referer);

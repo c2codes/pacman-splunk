@@ -1,5 +1,8 @@
 'use strict';
 
+// add timestamps in front of log messages
+require('console-stamp')(console, '[HH:MM:ss.l]');
+
 var express = require('express');
 var path = require('path');
 var Database = require('./lib/database');
