@@ -1,7 +1,7 @@
 'use strict';
 
 // add timestamps in front of log messages
-require('console-stamp')(console, '[HH:MM:ss.l]');
+require('console-stamp')(console, '[yyyy/mm/dd HH:MM:ss.l]');
 
 var express = require('express');
 var path = require('path');
